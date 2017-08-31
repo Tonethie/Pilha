@@ -1,7 +1,14 @@
-#include "stdafx.h"
+#define TAM 		4
+#define FIM 		TAM-1
+#define INICIO 		0
+
+#define OVERFLOW 	1
+#define UNDERFLOW 	2
+#define OK			3
+
 #include <conio.h>
 #include <stdlib.h>
-
+#include <stdio.h>
 typedef struct Pixel {
 	unsigned char p; //0 é fundo, 1 é pixel
 	unsigned char v; //1 já foi visitado
@@ -24,6 +31,10 @@ int main()
 {
 	char op;
 	int sair = 0;
+	int res;
+
+	tPilha *pilha = criaPilha(&res);
+	tPos *pos;
 
 	for (; sair == 0;)
 	{
@@ -33,13 +44,13 @@ int main()
 		scanf(" %c", &op);
 		switch (op)
 		{
-		case '1': push(); break;
-		case '2': pop(); break;
+		case '1': push(20, 10, pilha, &res); break;
+		case '2': pop(pilha, pos, &res); break;
 		case '3': listar(); break;
 		case '4': sair = 1; break;
 		default: {
 			printf("Opção invalida! \n");
-			getchar(); getchar();
+			getchar();
 			break;
 		}
 
@@ -50,7 +61,7 @@ int main()
 
 void push(int x, int y, struct Pilha *pilha, int *resultado) {
 	struct Pos *p = (struct Pos *)malloc(sizeof(struct Pos));
-	if (p == NULL) *resultado = ERRO;
+	if (p == NULL) *resultado = 0;
 	else {
 		p->x = x;
 		p->y = y;
@@ -70,7 +81,8 @@ void pop(struct Pilha *pilha, struct Pos *p, int *resultado) {
 	struct Pos *aux;
 	if (pilha->top == NULL) {
 		*resultado = UNDERFLOW;
-	} else {
+	}
+	else {
 		aux = pilha->top;
 		p->x = aux->x;
 		p->y = aux->y;
