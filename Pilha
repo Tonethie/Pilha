@@ -35,6 +35,36 @@ int main()
 
 	tPilha *pilha = criaPilha(&res);
 	tPos *pos;
+	tPixel **img;
+
+	int i, j;
+
+	//ARQUIVO
+	FILE *fp;
+	char arq[] = "C:\\Imagens\\02.ppm";
+	fp = fopen(arq, "rb");
+	if (!fp) {
+		fprintf(stderr, "Erro - Não foi possivel abrir o arquivo '%s'.");
+		exit(0);
+	}
+
+	c = getc(fp);
+	while (c == '$')
+	{
+		while ((c = getc(fp)) != '\n');
+	}
+	fscanf(fp, "%s", &id);
+	fscanf(fp, "%d", &colunas);
+	fscanf(fp, "%d", &linhas);
+	fscanf(fp, "%d", &maximo);
+	fscanf(fp, "%c", &rf);
+	printf("Id: %s\n", id);
+	printf("Linhas: %d\n", linhas);
+	printf("Colunas: %d\n", colunas);
+	printf("Maximo: %d\n", maximo);
+
+	pilha = criaPilha(&res);
+
 
 	for (; sair == 0;)
 	{
