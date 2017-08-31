@@ -1,0 +1,84 @@
+// ConsoleApplication1.cpp: Define o ponto de entrada para a aplicação de console.
+//
+
+#include "stdafx.h"
+#include <conio.h>
+#include <stdlib.h>
+
+typedef struct Pixel {
+	unsigned char p; //0 é fundo, 1 é pixel
+	unsigned char v; //1 já foi visitado
+}tPixel;
+typedef struct Pos {
+	int x;
+	int y;
+	struct Pos *ant;
+}tPos;
+typedef struct Pilha { //salva os pixels na pilha e a posição do topo
+	int quant; // quantas posições existem na pilha
+	struct Pos *top;
+}tPilha;
+
+struct Pilha *criaPilha(int *resultado);
+void push(int x, int y, struct Pilha *pilha, int *resultado);
+void pop(struct Pilha *pilha, struct Pos *p, int *resultado);
+
+int main()
+{
+	char op;
+	int sair = 0;
+
+	for (; sair == 0;)
+	{
+		printf("1 -> Insere na pilha\n2 -> Remove da pilha\n");
+		printf("3 -> Listar pilha\n4 -> Sair da pilha\n");
+		printf("\nDigite uma opção: ");
+		scanf(" %c", &op);
+		switch (op)
+		{
+		case '1': push(); break;
+		case '2': pop(); break;
+		case '3': listar(); break;
+		case '4': sair = 1; break;
+		default: {
+			printf("Opção invalida! \n");
+			getchar(); getchar();
+			break;
+		}
+
+		}
+	}
+	return 0;
+}
+
+void push(int x, int y, struct Pilha *pilha, int *resultado) {
+	struct Pos *p = (struct Pos *)malloc(sizeof(struct Pos));
+	if (p == NULL) *resultado = ERRO;
+	else {
+		p->x = x;
+		p->y = y;
+		if (pilha->top == NULL) {
+			p->ant = NULL;
+			pilha->top = p;
+		}
+		else {
+			p->ant = pilha->top;
+			pilha->top = p;
+		}
+		pilha->quant++;
+		*resultado = OK;
+	}
+}
+void pop(struct Pilha *pilha, struct Pos *p, int *resultado) {
+	struct Pos *aux;
+	if (pilha->top == NULL) {
+		*resultado = UNDERFLOW;
+	} else {
+		aux = pilha->top;
+		p->x = aux->x;
+		p->y = aux->y;
+		pilha->top = aux->ant;
+		pilha->quant++;
+		free(aux);
+	}
+}
